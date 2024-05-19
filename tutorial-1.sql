@@ -1,45 +1,44 @@
--- Show name, continent, and population attributes from the world entity
-SELECT name, continent, population FROM world;
+-- Find the country that start with Y
+SELECT name FROM world WHERE name LIKE 'Y%';
 
--- Show name of contries that have a population of at least 200 million people
-SELECT name FROM world WHERE population >= 200000000;
+-- Find the countries that end with y
+SELECT name FROM world WHERE name LIKE '%y';
 
--- Show name and per capita GDP of contries with at least 200 million people
-SELECT name, gdp/population AS 'per capita GDP' FROM world WHERE population >= 200000000;
+-- Find the countries that contain the letter x
+SELECT name FROM world WHERE name LIKE '%x%';
 
--- Show name and population in million of South American countries
-SELECT name, population/1000000 AS 'population (millions)' FROM world WHERE continent = 'South America';
+-- Find the countries that end with land
+SELECT name FROM world WHERE name LIKE '%land';
 
--- Show name and population of France, Germany, and Italy
-SELECT name, population FROM world WHERE name IN ('France', 'Germany', 'Italy');
+-- Find the countries that start with C and end with ia
+SELECT name FROM world WHERE name LIKE 'C%ia';
 
--- Show name of contries that start with "United"
-SELECT name FROM world WHERE name LIKE 'United%';
+-- Find the country that has oo in the name
+SELECT name FROM world WHERE name LIKE '%oo%';
 
--- Show name, population, and area of big countries (OR)
-SELECT name, population, area FROM world WHERE area > 3000000 OR population > 250000000;
+-- Find the countries that have three or more a in the name
+SELECT name FROM world WHERE LOWER(name) LIKE '%a%a%a%';
 
--- Show name, population, and area of big countries (XOR)
-SELECT name, population, area FROM world WHERE area > 3000000 XOR population > 250000000;
+-- Find the countries that have "t" as the second character.
+SELECT name FROM world WHERE name LIKE '_t%';
 
--- Show name, population in millions, gdp in billions of countries of South America rounded to two decimal places
-SELECT name, ROUND(population / 1000000, 2) AS 'population (millions)', ROUND(gdp / 1000000000, 2) AS 'gdp (billions)' FROM world WHERE continent = 'South America';
+-- Find the countries that have two "o" characters separated by two others.
+SELECT name FROM world WHERE name LIKE '%o__o%';
 
--- Show name, gdp per capita of countries with a gdp of at least one trillion
-SELECT name, ROUND(gdp/population,-3) AS 'gdp per capita' FROM world WHERE gdp > 1000000000000;
+-- Find the countries that have exactly four characters.
+SELECT name FROM world WHERE name LIKE '____';
 
--- Show name and capital of countries whose capital has the same length as the country name
-SELECT name, capital FROM world WHERE LENGTH(name) = LENGTH(capital);
+-- Find the country where the name is the capital city.
+SELECT name FROM world WHERE name = capital;
 
--- Show name and capital of countries that start with the same letter but are not the same word
-SELECT name, capital FROM world WHERE LEFT(name, 1) = LEFT(capital, 1) AND name != capital;
+-- Find the country where the capital is the country plus "City".
+SELECT name FROM world WHERE capital = CONCAT(name, ' City');
 
--- Show name of contries that have all vowels and no spaces in their name
-SELECT name
-FROM world
-WHERE LOWER(name) LIKE '%a%'
-  AND LOWER(name) LIKE '%e%'
-  AND LOWER(name) LIKE '%i%'
-  AND LOWER(name) LIKE '%o%'
-  AND LOWER(name) LIKE '%u%'
-  AND name not LIKE '% %';
+-- Find the capital and the name where the capital includes the name of the country.
+SELECT capital, name FROM world WHERE capital LIKE CONCAT('%',name,'%');
+
+-- Find the capital and the name where the capital is an extension of name of the country.
+SELECT capital, name FROM world WHERE capital LIKE concat(name, '%_');
+
+-- Show the name and the extension where the capital is a proper (non-empty) extension of name of the country.
+SELECT name, REPLACE( capital, name, '') FROM world WHERE capital LIKE concat(name, '%_');
